@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Elevator</title>
+  <meta name="viewport" content="width=device-width">
+  <link rel="stylesheet" href="style.css">
+  
+</head>
+<body>
+  <main>
+    <section>
+      <div id="wrapper">
+
+        <div id="panel">
+          <div id="screen">
+            <div id="floor-number">
+              1
+            </div>
+            <div id="up-down-indicators">
+              <div id="up-indicator"></div>
+              <div id="down-indicator"></div>
+            </div>
+          </div>
+          <div id="buttons">
+            <button id="third-floor">3</button>
+            <button id="fourth-floor">4</button>
+            <button id="first-floor">1</button>
+            <button id="second-floor">2</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+  </main>
+  
+  <script src="script.js"></script>
+  <script>
+    var panel = new Elevator({
+      inititalFloor: 1,
+      scopeSelector: 'panel',
+      namespace: 'myElevator'
+    });
+
+    // correct for loss of context in timeout
+    for(var method in panel){
+      if(typeof panel[method] === 'function'){
+        panel[method] = panel[method].bind(panel);
+      }
+    }
+
+    document.addEventListener('myElevator-arrival', function (e) {
+      window.setTimeout(panel['arrive'], 1000);
+    }, false);
+
+    // attach DOM elements to elevator object
+    panel.panel.floorNumber = document.getElementById('floor-number');
+    panel.panel.upIndicator = document.getElementById('up-indicator');
+    panel.panel.downIndicator = document.getElementById('down-indicator');
+
+    // get buttons
+    var firstFloorBtn = document.getElementById('first-floor');
+    var secondFloorBtn = document.getElementById('second-floor');
+    var thirdFloorBtn = document.getElementById('third-floor');
+    var fourthFloorBtn = document.getElementById('fourth-floor');
+
+    // add listeners to buttons
+    firstFloorBtn.addEventListener('click', function(){panel.addRequest(1)});
+    secondFloorBtn.addEventListener('click', function(){panel.addRequest(2)});
+    thirdFloorBtn.addEventListener('click', function(){panel.addRequest(3)});
+    fourthFloorBtn.addEventListener('click', function(){panel.addRequest(4)});
+
+  </script>
+</body>
+</html>
